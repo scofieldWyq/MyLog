@@ -9,3 +9,182 @@
 2014/11/15
 	14:50
 		关于百度地图的地图状态更新。一个baidumap 一个baidumapStatus,一个baidumapStatusUpdate.
+	15:15
+		关于百度地图如何自动找到你的position：
+			首先，你要有一个 baiduMap类的实例，需要一个mapStatusUpdate作为更新的一个选择器，而这个选择器一般是有mapStatusUpdateFactory所生成的，有可能你只是仅仅为了改变一下位置去移动地图，所以在mapStatusUpdateFactory中有关于所有的做法的使用。
+			这个是关于这个方法如何去设置mapStatusUpdate的代理方法。
+				static MapStatusUpdate	newLatLng(LatLng latLng)
+																	设置地图新中心点
+				static MapStatusUpdate	newLatLngBounds(LatLngBounds bounds)
+																	设置显示在屏幕中的地图地理范围
+				static MapStatusUpdate	newLatLngBounds(LatLngBounds bounds, int width, int height)
+																	设置显示在规定宽高中的地图地理范围
+				static MapStatusUpdate	newLatLngZoom(LatLng latLng, float zoom)
+																	设置地图中心点以及缩放级别
+				static MapStatusUpdate	newMapStatus(MapStatus mapStatus)
+																	设置地图新状态
+				static MapStatusUpdate	scrollBy(int xPixel, int yPixel)
+																	按像素移动地图中心点
+				static MapStatusUpdate	zoomBy(float amount)
+																	根据给定增量缩放地图级别
+				static MapStatusUpdate	zoomBy(float amount, Point focus)
+																	根据给定增量以及给定的屏幕坐标缩放地图级别
+				static MapStatusUpdate	zoomIn()
+																	放大地图缩放级别
+				static MapStatusUpdate	zoomOut()
+																	缩小地图缩放级别
+				static MapStatusUpdate	zoomTo(float zoom)
+																	设置地图缩放级别
+			----------------------------------------------------------------------------------------
+			
+			然后关于这些的值是返回给mapStatusUpdate的，然后就是使用它作为数据去调用 baiduMap类实例的设置地图状态更新的方法，这样就可以实现自动化的地图定位功能显示。
+			更新地图需要mapStatusUpdate，但是它本身是不能改变的，需要mapStatusUpdateFactory去设置它的属性。
+			而mapStatusUpdateFactory的设置可能就需要mapStatus作为参数，或者别的。
+			----------------------------------------------------------------------------------------
+			|关于mapStatusUpdate：
+			|	com.baidu.mapapi.map
+			|		类 MapStatusUpdate
+			|
+			|		java.lang.Object|
+			|					com.baidu.mapapi.map.MapStatusUpdate
+			|
+			|					public final class MapStatusUpdate
+			|														extends java.lang.Object
+			|														描述地图状态将要发生的变化
+			----------------------------------------------------------------------------------------
+			------------------------------------------------------------------------------------------
+			|关于mapStatus：
+			|static class 	MapStatus.Builder   //builder作为构造器的使用，它的创建会影响mapStatus的参数，而所有的参数设置就在Builder中。
+			|									地图状态构造器
+			|	字段概要
+			|
+			|		字段 
+			|			限定符和类型	字段和说明
+			|					float	overlook
+			|									地图俯仰角度。
+			|					float	rotate
+			|									地图旋转角度。
+			|					LatLng	target
+			|									地图操作的中心点。
+			|					Point	targetScreen
+			|									地图操作中心点在屏幕中的坐标
+			|					float	zoom
+			|									地图缩放级别 3~19
+			|	方法概要
+			|
+			|		方法 
+			|			限定符和类型	方法和说明
+			|		java.lang.String	toString() 
+			|										从类继承的方法 java.lang.Object
+			|														clone, equals, finalize, getClass, hashCode, notify, notifyAll, wait, wait, wait
+			|	字段详细资料
+			|
+			|			rotate
+			|					public final float rotate
+			|												地图旋转角度。
+			|			target
+			|					public final LatLng target
+			|												地图操作的中心点。
+			|			overlook
+			|					public final float overlook
+			|												地图俯仰角度。-45~0
+			|			zoom
+			|					public final float zoom
+			|												地图缩放级别 3~19
+			|			targetScreen
+			|					public final Point targetScreen
+			|												地图操作中心点在屏幕中的坐标
+			|	方法详细资料
+			|
+			|				toString
+			|							public java.lang.String toString()
+			|											覆盖:
+			|													toString 在类中 java.lang.Object
+			-----------------------------------------------------------------------------------------------------------------------------------------
+			-------------------------------------------------------------------------------------------------------
+			|有关于MapStatus.builder：
+			|		public static final class MapStatus.Builder
+			|											extends java.lang.Object
+			|																	地图状态构造器
+			|		构造器概要
+			|
+			|			构造器 
+			|					构造器和说明
+			|								MapStatus.Builder()
+			|													构造函数
+			|								MapStatus.Builder(MapStatus previous)
+			|													构造函数，以之前的地图状态为基础。
+			|		方法概要
+			|
+			|			方法 
+			|					限定符和类型	方法和说明
+			|						MapStatus	build()
+			|											创建地图状态对象
+			|						MapStatus.Builder	overlook(float overlook)
+			|											设置地图俯仰角
+			|						MapStatus.Builder	rotate(float rotate)
+			|											设置地图旋转角度，逆时针旋转。
+			|						MapStatus.Builder	target(LatLng location)
+			|											设置地图中心点
+			|						MapStatus.Builder	targetScreen(Point p)
+			|											设置地图操作中心点在屏幕的坐标, 只有在 OnMapLoadedCallback.onMapLoaded() 之后设置才生效
+			|						MapStatus.Builder	zoom(float zoom)
+			|											设置地图缩放级别
+			|		从类继承的方法 java.lang.Object
+			|									clone, equals, finalize, getClass, hashCode, notify, notifyAll, toString, wait, wait, wait
+			|		构造器详细资料
+			|
+			|						MapStatus.Builder
+			|										public MapStatus.Builder()
+			|																构造函数
+			|						MapStatus.Builder
+			|										public MapStatus.Builder(MapStatus previous)
+			|																构造函数，以之前的地图状态为基础。
+			|										参数:
+			|										previous - 之前的地图状态
+			|		方法详细资料
+|
+			|				rotate
+			|						public MapStatus.Builder rotate(float rotate)
+			|																	设置地图旋转角度，逆时针旋转。
+			|					参数:
+			|						rotate - 地图旋转角度
+			|					返回:
+			|						该地图状态构造器对象
+			|				target
+			|						public MapStatus.Builder target(LatLng location)
+			|																	设置地图中心点
+			|					参数:
+			|						location - 地图中心点
+			|					返回:
+			|						该地图状态构造器对象
+			|				overlook
+			|						public MapStatus.Builder overlook(float overlook)
+			|																	设置地图俯仰角
+			|					参数:
+			|						overlook - 地图俯仰角
+			|					返回:
+			|						该地图状态构造器对象
+			|				zoom
+			|					public MapStatus.Builder zoom(float zoom)
+			|																	设置地图缩放级别
+			|					参数:
+			|						zoom - 地图缩放级别
+			|					返回:
+			|						该地图状态构造器对象
+			|				targetScreen
+			|					public MapStatus.Builder targetScreen(Point p)
+			|																	设置地图操作中心点在屏幕的坐标, 只有在 OnMapLoadedCallback.onMapLoaded() 之后设置才生效
+			|					参数:
+			|						p - 地图操作中心点在屏幕的坐标
+			|					返回:
+			|						该地图状态构造器对象
+			|				build
+			|					public MapStatus build()
+			|																	创建地图状态对象
+			|					返回:
+			|						该地图状态构造器构造的地图状态对象
+			|------------------------------------------------------------------------------------------------------------------
+			
+			
+			
