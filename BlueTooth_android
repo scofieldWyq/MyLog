@@ -1,0 +1,23 @@
+android.bluetooth
+    Provides classes that manage Bluetooth functionality.
+    1,scanning for devices,
+    2,connecting with devices,
+    3,managing data transfer between devices.
+    
+  The Bluetooth API supports both "Classic Bluetooth" and Bluetooth Low Energy.
+  The Bluetooth APIs let applications:
+    1,Scan for other Bluetooth devices (including BLE devices).
+    2,Query the local Bluetooth adapter for paired Bluetooth devices.
+    3,Establish RFCOMM channels/sockets.
+    4,Connect to specified sockets on other devices.
+    5,Transfer data to and from other devices.
+    6,Communicate with BLE devices, such as proximity sensors, heart rate monitors, fitness devices, and so on.
+    7,Act as a GATT client or a GATT server (BLE).
+    
+  To perform Bluetooth communication using these APIs, an application must declare the 
+        BLUETOOTH permission. 
+    Some additional functionality, such as requesting device discovery, also requires the 
+        BLUETOOTH_ADMIN permission.
+        
+  Note: Not all Android-powered devices provide Bluetooth functionality.
+  
